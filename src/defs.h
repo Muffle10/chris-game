@@ -1,3 +1,4 @@
+#define G 400
 typedef struct Player{
 	Rectangle rect;
 	Vector2 speed;
@@ -9,4 +10,6 @@ typedef struct EnvEntity{
 	int blocking;
 	Color color;
 } EnvEntity;
-void UpdatePlayer(Player* player, EnvEntity* entity, int length);
+void UpdatePlayer(Player* player, float delta);
+void calcPlayerMovement(Player* player);
+// TODO: Implement entity collision
