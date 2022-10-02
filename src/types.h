@@ -9,3 +9,4 @@ typedef struct EnvEntity{
 	int blocking;
 	Color color;
 } EnvEntity;
+void UpdatePlayer(Player* player, EnvEntity* entity, int length);
