@@ -14,7 +14,7 @@ int main(){
 		UpdatePlayer(&player, deltaTime);
 		BeginDrawing();
           	ClearBackground(RAYWHITE);
-		DrawRectangleRec(player.rect, BLACK);
+			DrawRectangleRec(player.rect, BLACK);
 		EndDrawing();
 	}
 	CloseWindow(); 
