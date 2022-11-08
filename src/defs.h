@@ -11,5 +11,3 @@ typedef struct EnvEntity{
 	Color color;
 } EnvEntity;
 //void UpdatePlayer(Player* player, float delta);
-void calcPlayerMovement(Player* player, Vector2 vertex);
-// TODO: Implement entity collision
