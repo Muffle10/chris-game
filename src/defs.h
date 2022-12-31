@@ -11,9 +11,10 @@ Player
 		- JumpVel: float
 */
 bool getCollision(Rectangle object1, Rectangle object2);
+enum entity_type{ENEMY, PLAYER, PLATFORM, BACKGROUND};
 typedef struct EnvEntity{
 	Rectangle space;
-	int blocking;
+	
 	Color color;
 } EnvEntity;
 typedef struct {
