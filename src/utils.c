@@ -12,7 +12,7 @@ bool CheckBounds(Player* player, Rectangle* object, int i){
 		return CheckCollisionPointRec((Vector2) {player->bounds[i].startPos.x, (player->bounds[i].startPos.y + player->bounds[i].endPos.y) / 2}, *object);
 	}
 }
-void UpdatePlayer(Player* player, Rectangle* ground, EnvEntity* entities[], float d){
+void UpdatePlayer(Player* player, Rectangle* ground, float d){
 	if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) player->rect.x -= player->speed.x;
 	if (IsKeyDown(KEY_RIGHT)|| IsKeyDown(KEY_D)) player->rect.x += player->speed.x;
 	if ((IsKeyDown(KEY_UP)|| IsKeyDown(KEY_W)) && player->canJump) {
