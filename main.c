@@ -1,4 +1,5 @@
 #include <raylib.h>
+#include <string.h>
 #include "src/defs.h"
 #include "src/utils.c"
 int main(){
@@ -7,8 +8,13 @@ int main(){
 	Player player = {{20, 20, 40, 40}, {5, 7}, true, 0};
 	Color colors[4] = {BLUE, RED, GREEN, YELLOW};
 	Rectangle ground = {0, 300, screenWidth, 30};
-	Rectangle* platforms = MemAlloc(sizeof(Rectangle)*2);
-	platforms[0] = (Rectangle){100, 100, 100, 100};
+	Rectangle* platforms = MemAlloc(sizeof(Rectangle)*3);
+	static const Rectangle platforms_mem[] = {
+		{100, 100, 100, 100},
+		{200,200,200,200}
+	};
+	memcpy(platforms, platforms_mem, sizeof(platforms_mem));
+
    	InitWindow(screenWidth, screenHeight, title);
    	SetTargetFPS(60);
 	while (!WindowShouldClose()){
@@ -27,7 +33,9 @@ int main(){
 		player.bounds[3]= (Line) {{player.rect.x + player.rect.width, player.rect.y}, {player.rect.x + player.rect.width, player.rect.y + player.rect.height}};
 		BeginDrawing();
           	ClearBackground(RAYWHITE);
-			DrawRectangleRec(platforms[0], BLACK);
+			for(int i = 0; i < 2; i++){
+			DrawRectangleRec(platforms[i], BLACK);
+			}
 			for(int i = 0; i < 4; i++){
 				DrawLineEx(player.bounds[i].startPos, player.bounds[i].endPos, 10, RED);
 				if(CheckBounds(&player, &ground, i)){
