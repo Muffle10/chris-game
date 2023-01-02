@@ -4,9 +4,11 @@
 int main(){
 	//Definitions
 	float deltaTime = GetFrameTime();
-	const Rectangle ground = (Rectangle) {0, 300, screenWidth, 30};;
 	Player player = {{20, 20, 40, 40}, {5, 7}, true, 0};
-	EnvEntity entities[2];
+	Color colors[4] = {BLUE, RED, GREEN, YELLOW};
+	Rectangle ground = {0, 300, screenWidth, 30};
+	Rectangle* platforms = MemAlloc(sizeof(Rectangle)*2);
+	platforms[0] = (Rectangle){100, 100, 100, 100};
    	InitWindow(screenWidth, screenHeight, title);
    	SetTargetFPS(60);
 	while (!WindowShouldClose()){
@@ -19,15 +21,13 @@ int main(){
 		even = vertical 
 		odd = horizontal
 		*/
-		entities[0].space = (Rectangle){100,100,100,100};
-		entities[1].space = (Rectangle){300,100,30,30};
 		player.bounds[0]= (Line) {{player.rect.x, player.rect.y,}, {player.rect.x + player.rect.width, player.rect.y}};
 		player.bounds[1]= (Line) {{player.rect.x, player.rect.y,}, {player.rect.x, player.rect.y + player.rect.height}};
 		player.bounds[2]= (Line) {{player.rect.x, player.rect.y + player.rect.height,}, {player.rect.x + player.rect.width, player.rect.y + player.rect.height}};
 		player.bounds[3]= (Line) {{player.rect.x + player.rect.width, player.rect.y}, {player.rect.x + player.rect.width, player.rect.y + player.rect.height}};
 		BeginDrawing();
           	ClearBackground(RAYWHITE);
-			DrawRectangleRec(entities[1].space, RED);
+			DrawRectangleRec(platforms[0], BLACK);
 			for(int i = 0; i < 4; i++){
 				DrawLineEx(player.bounds[i].startPos, player.bounds[i].endPos, 10, RED);
 				if(CheckBounds(&player, &ground, i)){

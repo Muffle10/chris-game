@@ -3,7 +3,6 @@ bool getCollision(Rectangle object1, Rectangle object2);
 enum entity_type {ENEMY, PROJECTILE, PLATFORM};
 typedef struct EnvEntity{
 	Rectangle space;
-	enum entity_type type;
 } EnvEntity;
 /*
 	Line: Entities the player interacts with i.e: enemies, platforms
