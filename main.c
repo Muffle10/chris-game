@@ -11,14 +11,14 @@ int main(){
 	Rectangle* platforms = MemAlloc(sizeof(Rectangle)*4);
 	Rectangle* ladders = MemAlloc(sizeof(Rectangle)*3);
 	static const Rectangle platforms_mem[] = {
-		{0, screenHeight - 270, screenWidth, 20},
-		{0, screenHeight - 490, screenWidth, 20},
-		{0, screenHeight -  690, screenWidth, 20}
+		{0, screenHeight - 270, screenWidth, 30},
+		{0, screenHeight - 490, screenWidth, 30},
+		{0, screenHeight -  690, screenWidth, 30}
 	};
 	static const Rectangle ladders_mem[]= {
-		{100,100,100,100},
-		{100,100,100,100},
-		{100,100,100,100},
+		{screenWidth - 80, screenHeight - 270,70,250},
+		{70, screenHeight - 490,70,250},
+		{screenWidth - 75, screenHeight - 690,70,230},
 	};
 	memcpy(platforms, platforms_mem, sizeof(platforms_mem));
 	memcpy(ladders, ladders_mem, sizeof(ladders_mem));
@@ -26,7 +26,9 @@ int main(){
    	InitWindow(screenWidth, screenHeight, title);
    	SetTargetFPS(60);
 	while (!WindowShouldClose()){
-		UpdatePlayer(&player, &ground, deltaTime);
+		UpdatePlayerGround(&player, &platforms[0], deltaTime);
+		UpdatePlayerGround(&player, &ground, deltaTime);
+		HandleMovement(&player);
 		/*
 		bounds[0]= top
 		bounds[1]= left
@@ -43,9 +45,7 @@ int main(){
           	ClearBackground(RAYWHITE);
 			for(int i = 0; i < 3; i++){
 			DrawRectangleRec(platforms[i], BLACK);
-			}
-			for(int i = 0; i < 3; i++){
-			DrawRectangleRec(ladders[i], BLACK);
+			DrawRectangleRec(ladders[i], GRAY);
 			}
 			for(int i = 0; i < 4; i++){
 				DrawLineEx(player.bounds[i].startPos, player.bounds[i].endPos, 10, RED);

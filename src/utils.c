@@ -12,20 +12,20 @@ bool CheckBounds(Player* player, Rectangle* object, int i){
 		return CheckCollisionPointRec((Vector2) {player->bounds[i].startPos.x, (player->bounds[i].startPos.y + player->bounds[i].endPos.y) / 2}, *object);
 	}
 }
-void UpdatePlayer(Player* player, Rectangle* ground, float d){
+void HandleMovement(Player* player){
 	if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) player->rect.x -= player->speed.x;
 	if (IsKeyDown(KEY_RIGHT)|| IsKeyDown(KEY_D)) player->rect.x += player->speed.x;
+	player->rect.y += player->speed.y;
+    player->speed.y += 0.3;
+    player->canJump = false;
+}
+void UpdatePlayerGround(Player* player, Rectangle* ground, float d){
 	if ((IsKeyDown(KEY_UP)|| IsKeyDown(KEY_W)) && player->canJump) {
 		player->speed.y = -9;
 		player->canJump = false;
 		player->rect.y += player->speed.y;
 	}
-	
-	if (!CheckCollisionRecs(player->rect, *ground)){
-		player->rect.y += player->speed.y;
-        player->speed.y += 0.3;
-        player->canJump = false;
-	}else{
+	if (CheckCollisionRecs(player->rect, *ground)){
 		player->speed.y = 0;
 		player->rect.y = ground->y - player->rect.height + 1;
 		player->canJump = true;
