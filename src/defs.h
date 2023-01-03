@@ -38,8 +38,8 @@ Player
 		- bounds: used to calculate collisions
 */
 void DrawLineL(Line line, Color color);
-const int screenWidth = 800;
-const int screenHeight = 450;
+const int screenWidth = 540;
+const int screenHeight = 820;
 const char* title = "chris game";
 
 //void UpdatePlayer(Player* player, float delta);

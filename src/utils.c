@@ -16,7 +16,7 @@ void UpdatePlayer(Player* player, Rectangle* ground, float d){
 	if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) player->rect.x -= player->speed.x;
 	if (IsKeyDown(KEY_RIGHT)|| IsKeyDown(KEY_D)) player->rect.x += player->speed.x;
 	if ((IsKeyDown(KEY_UP)|| IsKeyDown(KEY_W)) && player->canJump) {
-		player->speed.y = -10;
+		player->speed.y = -9;
 		player->canJump = false;
 		player->rect.y += player->speed.y;
 	}

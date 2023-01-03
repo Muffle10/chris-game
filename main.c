@@ -7,11 +7,12 @@ int main(){
 	float deltaTime = GetFrameTime();
 	Player player = {{20, 20, 40, 40}, {5, 7}, true, 0};
 	Color colors[4] = {BLUE, RED, GREEN, YELLOW};
-	Rectangle ground = {0, 300, screenWidth, 30};
-	Rectangle* platforms = MemAlloc(sizeof(Rectangle)*3);
+	Rectangle ground = {0, screenHeight - 30, screenWidth, 40};
+	Rectangle* platforms = MemAlloc(sizeof(Rectangle)*4);
 	static const Rectangle platforms_mem[] = {
-		{100, 100, 100, 100},
-		{200,200,200,200}
+		{0, screenHeight - 270, screenWidth, 20},
+		{0, screenHeight - 490, screenWidth, 20},
+		{0, screenHeight -  690, screenWidth, 20}
 	};
 	memcpy(platforms, platforms_mem, sizeof(platforms_mem));
 
@@ -33,7 +34,7 @@ int main(){
 		player.bounds[3]= (Line) {{player.rect.x + player.rect.width, player.rect.y}, {player.rect.x + player.rect.width, player.rect.y + player.rect.height}};
 		BeginDrawing();
           	ClearBackground(RAYWHITE);
-			for(int i = 0; i < 2; i++){
+			for(int i = 0; i < 3; i++){
 			DrawRectangleRec(platforms[i], BLACK);
 			}
 			for(int i = 0; i < 4; i++){
