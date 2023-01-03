@@ -28,6 +28,7 @@ int main(){
 	while (!WindowShouldClose()){
 		UpdatePlayer(&player, &platforms[0], deltaTime);
 		UpdatePlayer(&player, &platforms[1], deltaTime);
+		UpdatePlayer(&player, &platforms[2], deltaTime);
 		UpdatePlayer(&player, &ground, deltaTime);
 		HandleMovement(&player);
 		/*
