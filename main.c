@@ -9,12 +9,19 @@ int main(){
 	Color colors[4] = {BLUE, RED, GREEN, YELLOW};
 	Rectangle ground = {0, screenHeight - 30, screenWidth, 40};
 	Rectangle* platforms = MemAlloc(sizeof(Rectangle)*4);
+	Rectangle* ladders = MemAlloc(sizeof(Rectangle)*3);
 	static const Rectangle platforms_mem[] = {
 		{0, screenHeight - 270, screenWidth, 20},
 		{0, screenHeight - 490, screenWidth, 20},
 		{0, screenHeight -  690, screenWidth, 20}
 	};
+	static const Rectangle ladders_mem[]= {
+		{100,100,100,100},
+		{100,100,100,100},
+		{100,100,100,100},
+	};
 	memcpy(platforms, platforms_mem, sizeof(platforms_mem));
+	memcpy(ladders, ladders_mem, sizeof(ladders_mem));
 
    	InitWindow(screenWidth, screenHeight, title);
    	SetTargetFPS(60);
@@ -36,6 +43,9 @@ int main(){
           	ClearBackground(RAYWHITE);
 			for(int i = 0; i < 3; i++){
 			DrawRectangleRec(platforms[i], BLACK);
+			}
+			for(int i = 0; i < 3; i++){
+			DrawRectangleRec(ladders[i], BLACK);
 			}
 			for(int i = 0; i < 4; i++){
 				DrawLineEx(player.bounds[i].startPos, player.bounds[i].endPos, 10, RED);
