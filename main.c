@@ -26,8 +26,9 @@ int main(){
    	InitWindow(screenWidth, screenHeight, title);
    	SetTargetFPS(60);
 	while (!WindowShouldClose()){
-		UpdatePlayerGround(&player, &platforms[0], deltaTime);
-		UpdatePlayerGround(&player, &ground, deltaTime);
+		UpdatePlayer(&player, &platforms[0], deltaTime);
+		UpdatePlayer(&player, &platforms[1], deltaTime);
+		UpdatePlayer(&player, &ground, deltaTime);
 		HandleMovement(&player);
 		/*
 		bounds[0]= top

@@ -19,7 +19,7 @@ void HandleMovement(Player* player){
     player->speed.y += 0.3;
     player->canJump = false;
 }
-void UpdatePlayerGround(Player* player, Rectangle* ground, float d){
+void UpdatePlayer(Player* player, Rectangle* ground, float d){
 	if ((IsKeyDown(KEY_UP)|| IsKeyDown(KEY_W)) && player->canJump) {
 		player->speed.y = -9;
 		player->canJump = false;
