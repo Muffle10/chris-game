@@ -10,10 +10,16 @@ int main(){
 	Rectangle ground = {0, screenHeight - 30, screenWidth, 40};
 	Rectangle* platforms = MemAlloc(sizeof(Rectangle)*4);
 	Rectangle* ladders = MemAlloc(sizeof(Rectangle)*3);
+	Enemy* enemies = MemAlloc(sizeof(Enemy)*3);
 	static const Rectangle platforms_mem[] = {
 		{0, screenHeight - 270, screenWidth, 30},
 		{0, screenHeight - 490, screenWidth, 30},
 		{0, screenHeight -  690, screenWidth, 30}
+	};
+	static const Enemy enemies_mem[] = {
+		{{100, 270, 100, 30}, IDLE},
+		{0},
+		{0}
 	};
 	static const Rectangle ladders_mem[]= {
 		{screenWidth - 80, screenHeight - 270,70,250},
@@ -22,14 +28,11 @@ int main(){
 	};
 	memcpy(platforms, platforms_mem, sizeof(platforms_mem));
 	memcpy(ladders, ladders_mem, sizeof(ladders_mem));
+	memcpy(enemies, enemies_mem, sizeof(enemies_mem));
 
    	InitWindow(screenWidth, screenHeight, title);
    	SetTargetFPS(60);
 	while (!WindowShouldClose()){
-		UpdatePlayer(&player, &platforms[0], deltaTime);
-		UpdatePlayer(&player, &platforms[1], deltaTime);
-		UpdatePlayer(&player, &platforms[2], deltaTime);
-		UpdatePlayer(&player, &ground, deltaTime);
 		HandleMovement(&player);
 		/*
 		bounds[0]= top
@@ -48,6 +51,11 @@ int main(){
 			for(int i = 0; i < 3; i++){
 			DrawRectangleRec(platforms[i], BLACK);
 			DrawRectangleRec(ladders[i], GRAY);
+			DrawRectangleRec(enemies[i].space, GRAY);
+			UpdatePlayer(&player, &platforms[i], &ladders[i], deltaTime);
+			UpdatePlayer(&player, &platforms[i], &ladders[i],deltaTime);
+			UpdatePlayer(&player, &platforms[i], &ladders[i],deltaTime);
+			UpdatePlayer(&player, &ground, &ladders[i], deltaTime);
 			}
 			for(int i = 0; i < 4; i++){
 				DrawLineEx(player.bounds[i].startPos, player.bounds[i].endPos, 10, RED);

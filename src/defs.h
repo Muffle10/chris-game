@@ -1,14 +1,10 @@
 #define G 400
 bool getCollision(Rectangle object1, Rectangle object2);
-enum entity_type {ENEMY, PROJECTILE, PLATFORM};
-typedef struct EnvEntity{
+enum enemy_state {IDLE, MOVING, THROWING, CLIMBING};
+typedef struct Enemy{
 	Rectangle space;
-} EnvEntity;
-/*
-	Line: Entities the player interacts with i.e: enemies, platforms
-		- space: space the entity takes up
-		- type: what type of enemy
-*/
+	enum enemy_state state;
+} Enemy;
 typedef struct {
 	Vector2 startPos;
 	Vector2 endPos;

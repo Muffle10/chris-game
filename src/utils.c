@@ -19,15 +19,45 @@ void HandleMovement(Player* player){
     player->speed.y += 0.3;
     player->canJump = false;
 }
-void UpdatePlayer(Player* player, Rectangle* ground, float d){
+void HandleLadder(Player* player){
+	if ((IsKeyDown(KEY_DOWN)|| IsKeyDown(KEY_S)))
+	{
+		player->rect.y += 1;
+	}
+}
+void UpdatePlayer(Player* player, Rectangle* ground, Rectangle* ladder, float d){
 	if ((IsKeyDown(KEY_UP)|| IsKeyDown(KEY_W)) && player->canJump) {
 		player->speed.y = -9;
 		player->canJump = false;
 		player->rect.y += player->speed.y;
 	}
-	if (CheckCollisionRecs(player->rect, *ground)){
-		player->speed.y = 0;
-		player->rect.y = ground->y - player->rect.height + 1;
+	
+	if (CheckBounds(player, ground, 2)){
+		if (CheckBounds(player, ladder, 2)){
+			player->speed.y = 0;
+			if ((IsKeyDown(KEY_DOWN)|| IsKeyDown(KEY_S)))
+	{
+		player->rect.y += 1;
+	}
+	if (IsKeyDown(KEY_UP)|| IsKeyDown(KEY_W)){
+		player->rect.y -= 1;
+	}
+	
+		} else {
+			player->speed.y = 0;
+		player->rect.y = ground->y - player->rect.height;
 		player->canJump = true;
+		}
+	} else {
+		if (CheckBounds(player, ladder, 2)){
+			player->speed.y = 0;
+			if ((IsKeyDown(KEY_DOWN)|| IsKeyDown(KEY_S)))
+	{
+		player->rect.y += 1;
+	}
+	if (IsKeyDown(KEY_UP)|| IsKeyDown(KEY_W)){
+		player->rect.y -= 1;
+	}
+		} 
 	}
 };
