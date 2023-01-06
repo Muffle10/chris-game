@@ -5,7 +5,7 @@
 int main(){
 	//Definitions
 	float deltaTime = GetFrameTime();
-	Player player = {{20, 20, 40, 40}, {5, 7}, true, 0};
+	Player player = {{200, 700, 40, 40}, {5, 7}, true, 0};
 	Color colors[4] = {BLUE, RED, GREEN, YELLOW};
 	Rectangle ground = {0, screenHeight - 30, screenWidth, 40};
 	Rectangle* platforms = MemAlloc(sizeof(Rectangle)*4);
@@ -17,9 +17,9 @@ int main(){
 		{0, screenHeight -  690, screenWidth, 30}
 	};
 	static const Enemy enemies_mem[] = {
-		{{100, 270, 100, 30}, IDLE},
-		{0},
-		{0}
+		{{45, screenHeight -  725, 35, 35}, IDLE},
+		{{70, screenHeight -  725, 35, 35}, IDLE},
+		{{115, screenHeight -  725, 35, 35}, IDLE}
 	};
 	static const Rectangle ladders_mem[]= {
 		{screenWidth - 80, screenHeight - 270,70,250},
@@ -34,6 +34,7 @@ int main(){
    	SetTargetFPS(60);
 	while (!WindowShouldClose()){
 		HandleMovement(&player);
+		UpdatePlayerGround(&player, &ground, &ladders[1], deltaTime);
 		/*
 		bounds[0]= top
 		bounds[1]= left
@@ -55,7 +56,6 @@ int main(){
 			UpdatePlayer(&player, &platforms[i], &ladders[i], deltaTime);
 			UpdatePlayer(&player, &platforms[i], &ladders[i],deltaTime);
 			UpdatePlayer(&player, &platforms[i], &ladders[i],deltaTime);
-			UpdatePlayer(&player, &ground, &ladders[i], deltaTime);
 			}
 			for(int i = 0; i < 4; i++){
 				DrawLineEx(player.bounds[i].startPos, player.bounds[i].endPos, 10, RED);
