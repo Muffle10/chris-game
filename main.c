@@ -68,7 +68,7 @@ int main(){
 			UpdatePlayer(&player, &platforms[i], &ladders[i], deltaTime);
 			}
 			DrawText(TextFormat("%d", enemy_size), 400 , 100, 20, BLACK);
-			for(int i = 0; i < 5; i++){
+			for(int i = 0; i < 10; i++){
 				UpdateEnemy(&enemies[i], &timer, &player);
 				DrawRectangleRec(enemies[i].space, RED);
 			}

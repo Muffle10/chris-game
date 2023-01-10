@@ -101,7 +101,7 @@ if( fmod(GetTime(), 5) >= 0 && fmod(GetTime(), 5) <= 0.02 ){
 		enemy->space.x = 100;
 	}
 }
-if( fmod(GetTime(), 2) >= 0 && fmod(GetTime(), 2) <= 0.1 ){
+if( fmod(GetTime(), 2) >= 0 && fmod(GetTime(), 2) <= 0.5 ){
 	enemy->space.y += 2;
 }
 if(CheckCollisionRecs(player->rect, enemy->space)){
