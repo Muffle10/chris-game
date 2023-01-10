@@ -12,6 +12,22 @@ bool CheckBounds(Player* player, Rectangle* object, int i){
 		return CheckCollisionPointRec((Vector2) {player->bounds[i].startPos.x, (player->bounds[i].startPos.y + player->bounds[i].endPos.y) / 2}, *object);
 	}
 }
+void StartTimer(Timer *timer, double lifetime)
+{
+	timer->startTime = GetTime();
+    timer->lifeTime = lifetime;
+}
+
+bool TimerDone(Timer timer)
+{
+    return 0 >= timer.lifeTime;
+}
+void UpdateTimer(Timer* timer){
+}
+double GetElapsed(Timer timer)
+{
+    return GetTime() - timer.startTime;
+}
 void HandleMovement(Player* player){
 	if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) player->rect.x -= player->speed.x;
 	if (IsKeyDown(KEY_RIGHT)|| IsKeyDown(KEY_D)) player->rect.x += player->speed.x;
@@ -39,7 +55,12 @@ void UpdatePlayer(Player* player, Rectangle* ground, Rectangle* ladder, float d)
 				player->rect.y += 1;
 			}
 			if (IsKeyDown(KEY_UP)|| IsKeyDown(KEY_W)){
-			player->rect.y -= 1;
+				if ((IsKeyDown(KEY_UP)|| IsKeyDown(KEY_W)) && !player->canJump) {
+					player->speed.y = -8;
+					player->canJump = false;
+				}else{
+	}
+				player->rect.y -= 1;
 			}
 		} else {
 			player->speed.y = 0;
@@ -55,7 +76,8 @@ void UpdatePlayer(Player* player, Rectangle* ground, Rectangle* ladder, float d)
 			if (IsKeyDown(KEY_UP)|| IsKeyDown(KEY_W)){
 				player->rect.y -= 1;
 			}
-		} 
+		} else {
+		}
 	}
 };
 void UpdatePlayerGround(Player* player, Rectangle* ground, Rectangle* ladder, float d){
@@ -70,8 +92,19 @@ void UpdatePlayerGround(Player* player, Rectangle* ground, Rectangle* ladder, fl
 		player->canJump = true;
 	}
 }
-void UpdateEnemy(Enemy* enemy, Player* player){
+void UpdateEnemy(Enemy* enemy, Timer* timer, Player* player){
 	/*
-	make enemy move left and right randomly by changing enemy.x using raylib getrandomvalue
-	*/
+	make enemy move left and right randomly by changing enemy.x using raylib getrandomvalue*/
+if( fmod(GetTime(), 5) >= 0 && fmod(GetTime(), 5) <= 0.02 ){
+	enemy->space.x += GetRandomValue(-10 , 10);
+	if(enemy->space.x + enemy->space.width > screenWidth || enemy->space.x < 0){
+		enemy->space.x = 100;
+	}
+}
+if( fmod(GetTime(), 2) >= 0 && fmod(GetTime(), 2) <= 0.1 ){
+	enemy->space.y += 2;
+}
+if(CheckCollisionRecs(player->rect, enemy->space)){
+		enemy->space = (Rectangle){0};
+	}
 }
