@@ -3,6 +3,7 @@
   "files.associations": {
     "defs.h": "c",
     "ios": "c",
-    "time.h": "c"
+    "time.h": "c",
+    "string.h": "c"
   }
 }

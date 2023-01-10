@@ -22,7 +22,8 @@ typedef struct Player{
 	Rectangle rect;
 	Vector2 speed;
 	bool canJump;
-	float jumpVel;
+	int direction;
+	Rectangle fist;
 	Line bounds[];
 } Player;
 /*

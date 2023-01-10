@@ -29,8 +29,14 @@ double GetElapsed(Timer timer)
     return GetTime() - timer.startTime;
 }
 void HandleMovement(Player* player){
-	if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) player->rect.x -= player->speed.x;
-	if (IsKeyDown(KEY_RIGHT)|| IsKeyDown(KEY_D)) player->rect.x += player->speed.x;
+	if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) {
+		player->rect.x -= player->speed.x;
+		player->direction = 0;
+	}
+	if (IsKeyDown(KEY_RIGHT)|| IsKeyDown(KEY_D)) {
+		player->rect.x += player->speed.x;
+		player->direction = 1;
+	}
 	player->rect.y += player->speed.y;
     player->speed.y += 0.3;
     player->canJump = false;
@@ -104,7 +110,7 @@ if( fmod(GetTime(), 5) >= 0 && fmod(GetTime(), 5) <= 0.02 ){
 if( fmod(GetTime(), 2) >= 0 && fmod(GetTime(), 2) <= 0.5 ){
 	enemy->space.y += 2;
 }
-if(CheckCollisionRecs(player->rect, enemy->space)){
+if(CheckCollisionRecs(player->fist, enemy->space)){
 		enemy->space = (Rectangle){0};
-	}
+}
 }

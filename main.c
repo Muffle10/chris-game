@@ -6,8 +6,9 @@
 #include "src/utils.c"
 int main(){
 	//Definitions
-	Player player = {{200, 700, 40, 40}, {5, 7}, true, 0};
+	Player player = {{200, 700, 40, 40}, {5, 7}, true, 0, {200, 700, 40, 40} };
 	double deltaTime;
+	bool showing = false;
 	Timer timer;
 	Color colors[4] = {BLUE, RED, GREEN, YELLOW};
 	Rectangle ground = {0, screenHeight - 30, screenWidth, 40};
@@ -58,6 +59,16 @@ int main(){
 		player.bounds[1]= (Line) {{player.rect.x, player.rect.y,}, {player.rect.x, player.rect.y + player.rect.height}};
 		player.bounds[2]= (Line) {{player.rect.x, player.rect.y + player.rect.height,}, {player.rect.x + player.rect.width, player.rect.y + player.rect.height}};
 		player.bounds[3]= (Line) {{player.rect.x + player.rect.width, player.rect.y}, {player.rect.x + player.rect.width, player.rect.y + player.rect.height}};
+		if(player.direction == 0){
+			player.fist = (Rectangle) {player.rect.x - 30, player.rect.y + (player.rect.height / 2) - 15 ,30,30};
+		} else {
+			player.fist = (Rectangle) {player.rect.x + player.rect.width, player.rect.y + (player.rect.height / 2) - 15,30,30};
+		}
+		if(IsKeyDown(KEY_SPACE)){
+			showing = true;
+		} else{
+			showing = false;
+		}
 		BeginDrawing();
           	ClearBackground(RAYWHITE);
 			for(int i = 0; i < 3; i++){
@@ -67,6 +78,7 @@ int main(){
 			UpdatePlayer(&player, &platforms[i], &ladders[i], deltaTime);
 			UpdatePlayer(&player, &platforms[i], &ladders[i], deltaTime);
 			}
+			if(showing)DrawRectangleRec(player.fist, RED);
 			DrawText(TextFormat("%d", enemy_size), 400 , 100, 20, BLACK);
 			for(int i = 0; i < 10; i++){
 				UpdateEnemy(&enemies[i], &timer, &player);
