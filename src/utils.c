@@ -109,16 +109,15 @@ if( fmod(GetTime(), 5) >= 0 && fmod(GetTime(), 5) <= 0.02 ){
 }
 if( fmod(GetTime(), 2) >= 0 && fmod(GetTime(), 2) <= 0.5 ){
 }
+enemy->space.y += enemy_speed;
 if(CheckCollisionRecs(player->fist, enemy->space)){
 		enemy->space = (Rectangle){0,0,0,0};
 }
-
+if(CheckCollisionRecs(enemy->space, *ground)){
+		enemy_speed = 0;
+} else{
+	enemy_speed = 5;
+}
 }
 void HandleEnemyGrav(Enemy* enemy, Rectangle* ground){
-	enemy->space.y += enemy_speed;
-	if(!CheckCollisionRecs(enemy->space, *ground)){
-		enemy_speed = 1;
-	} else {
-		enemy_speed = 0;
-	}
 }

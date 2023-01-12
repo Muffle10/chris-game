@@ -90,10 +90,6 @@ int main(){
 			DrawText(TextFormat("%f", enemies[1].space.width), 400 , 100, 20, BLACK);
 			for(int i = 0; i < 10; i++){
 				UpdateEnemy(&enemies[i], &timer, &player, &ground);
-				HandleEnemyGrav(&enemies[i],&ground);
-				HandleEnemyGrav(&enemies[i],&platforms[0]);
-				HandleEnemyGrav(&enemies[i],&platforms[1]);
-				HandleEnemyGrav(&enemies[i],&platforms[2]);
 				DrawRectangleRec(enemies[i].space, RED);
 			}
 			DrawText(TextFormat("%i", GetRandomValue(0,2)), 400, 200,20,BLACK);
