@@ -111,6 +111,6 @@ if( fmod(GetTime(), 2) >= 0 && fmod(GetTime(), 2) <= 0.5 ){
 	enemy->space.y += 2;
 }
 if(CheckCollisionRecs(player->fist, enemy->space)){
-		enemy->space = (Rectangle){0};
+		enemy->space = (Rectangle){0,0,0,0};
 }
 }

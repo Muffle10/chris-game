@@ -42,8 +42,12 @@ int main(){
 		UpdatePlayerGround(&player, &ground, &ladders[1], deltaTime);
 		if( (fmod(GetTime(), 5) >= 0 && fmod(GetTime(), 5) <= 0.02)){
 			if(enemy_size >= 10){
+				enemy_size = 0;
 			} else {
-				enemies[enemy_size] = (Enemy) {{screenWidth - 50, 200, 100, 30}, 0};
+				if(enemies[enemy_size].space.x == 0){
+					enemies[enemy_size] = (Enemy) {{screenWidth - 50, 200, 100, 30}, 0};
+				} else {
+				}
 				enemy_size++;
 			}
 		}
@@ -59,10 +63,13 @@ int main(){
 		player.bounds[1]= (Line) {{player.rect.x, player.rect.y,}, {player.rect.x, player.rect.y + player.rect.height}};
 		player.bounds[2]= (Line) {{player.rect.x, player.rect.y + player.rect.height,}, {player.rect.x + player.rect.width, player.rect.y + player.rect.height}};
 		player.bounds[3]= (Line) {{player.rect.x + player.rect.width, player.rect.y}, {player.rect.x + player.rect.width, player.rect.y + player.rect.height}};
+		if(showing){
 		if(player.direction == 0){
 			player.fist = (Rectangle) {player.rect.x - 30, player.rect.y + (player.rect.height / 2) - 15 ,30,30};
 		} else {
 			player.fist = (Rectangle) {player.rect.x + player.rect.width, player.rect.y + (player.rect.height / 2) - 15,30,30};
+		}} else{
+			player.fist = (Rectangle) {0};
 		}
 		if(IsKeyDown(KEY_SPACE)){
 			showing = true;
