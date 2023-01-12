@@ -98,7 +98,7 @@ void UpdatePlayerGround(Player* player, Rectangle* ground, Rectangle* ladder, fl
 		player->canJump = true;
 	}
 }
-void UpdateEnemy(Enemy* enemy, Timer* timer, Player* player){
+void UpdateEnemy(Enemy* enemy, Timer* timer, Player* player, Rectangle* ground){
 	/*
 	make enemy move left and right randomly by changing enemy.x using raylib getrandomvalue*/
 if( fmod(GetTime(), 5) >= 0 && fmod(GetTime(), 5) <= 0.02 ){
@@ -108,9 +108,17 @@ if( fmod(GetTime(), 5) >= 0 && fmod(GetTime(), 5) <= 0.02 ){
 	}
 }
 if( fmod(GetTime(), 2) >= 0 && fmod(GetTime(), 2) <= 0.5 ){
-	enemy->space.y += 2;
 }
 if(CheckCollisionRecs(player->fist, enemy->space)){
 		enemy->space = (Rectangle){0,0,0,0};
 }
+
+}
+void HandleEnemyGrav(Enemy* enemy, Rectangle* ground){
+	enemy->space.y += enemy_speed;
+	if(!CheckCollisionRecs(enemy->space, *ground)){
+		enemy_speed = 1;
+	} else {
+		enemy_speed = 0;
+	}
 }

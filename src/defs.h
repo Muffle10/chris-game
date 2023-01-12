@@ -1,6 +1,7 @@
 #define G 400
 bool getCollision(Rectangle object1, Rectangle object2);
 enum enemy_state {IDLE, MOVING, THROWING, CLIMBING};
+int enemy_speed = 0;
 typedef struct Timer {
     double startTime;   // Start time (seconds)
     double lifeTime;    // Lifetime (seconds)

@@ -30,6 +30,7 @@ int main(){
 		{70, screenHeight - 490,70,250},
 		{screenWidth - 75, screenHeight - 690,70,230},
 	};
+	float levels[3] = {screenHeight - 270 - 30, screenHeight - 490 - 30, screenHeight -  690 - 30};
 	memcpy(platforms, platforms_mem, sizeof(platforms_mem));
 	memcpy(ladders, ladders_mem, sizeof(ladders_mem));
 	memcpy(enemies, enemies_mem, sizeof(enemies_mem));
@@ -41,11 +42,11 @@ int main(){
 		HandleMovement(&player);
 		UpdatePlayerGround(&player, &ground, &ladders[1], deltaTime);
 		if( (fmod(GetTime(), 5) >= 0 && fmod(GetTime(), 5) <= 0.02)){
-			if(enemy_size >= 10){
+			if(enemy_size > 9){
 				enemy_size = 0;
 			} else {
-				if(enemies[enemy_size].space.x == 0){
-					enemies[enemy_size] = (Enemy) {{screenWidth - 50, 200, 100, 30}, 0};
+				if(enemies[enemy_size].space.width == (float)0){
+					enemies[enemy_size] = (Enemy) {{screenWidth - 50, levels[GetRandomValue(0,2)], 30, 30}, 0};
 				} else {
 				}
 				enemy_size++;
@@ -86,11 +87,16 @@ int main(){
 			UpdatePlayer(&player, &platforms[i], &ladders[i], deltaTime);
 			}
 			if(showing)DrawRectangleRec(player.fist, RED);
-			DrawText(TextFormat("%d", enemy_size), 400 , 100, 20, BLACK);
+			DrawText(TextFormat("%f", enemies[1].space.width), 400 , 100, 20, BLACK);
 			for(int i = 0; i < 10; i++){
-				UpdateEnemy(&enemies[i], &timer, &player);
+				UpdateEnemy(&enemies[i], &timer, &player, &ground);
+				HandleEnemyGrav(&enemies[i],&ground);
+				HandleEnemyGrav(&enemies[i],&platforms[0]);
+				HandleEnemyGrav(&enemies[i],&platforms[1]);
+				HandleEnemyGrav(&enemies[i],&platforms[2]);
 				DrawRectangleRec(enemies[i].space, RED);
 			}
+			DrawText(TextFormat("%i", GetRandomValue(0,2)), 400, 200,20,BLACK);
 			DrawText(TextFormat("%f", fmod(GetTime(), 5)), GetFrameTime(),100,20,BLACK);
 			for(int i = 0; i < 4; i++){
 				DrawLineEx(player.bounds[i].startPos, player.bounds[i].endPos, 10, RED);
