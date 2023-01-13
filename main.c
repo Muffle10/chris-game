@@ -87,7 +87,7 @@ int main(){
 			UpdatePlayer(&player, &platforms[i], &ladders[i], deltaTime);
 			}
 			if(showing)DrawRectangleRec(player.fist, RED);
-			DrawText(TextFormat("%f", enemies[1].space.width), 400 , 100, 20, BLACK);
+			DrawText(TextFormat("%f", CheckCollisionRecs(enemy[0].space, ground)), 400 , 100, 20, BLACK);
 			for(int i = 0; i < 10; i++){
 				UpdateEnemy(&enemies[i], &timer, &player, &ground);
 				DrawRectangleRec(enemies[i].space, RED);
