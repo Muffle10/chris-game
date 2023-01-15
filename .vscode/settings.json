@@ -4,6 +4,7 @@
     "defs.h": "c",
     "ios": "c",
     "time.h": "c",
-    "string.h": "c"
+    "string.h": "c",
+    "__locale": "c"
   }
 }

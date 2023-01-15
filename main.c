@@ -8,12 +8,16 @@ int main(){
 	//Definitions
 	Player player = {{200, 700, 40, 40}, {5, 7}, true, 0, {200, 700, 40, 40} };
 	double deltaTime;
+	int lives = 3;
 	bool showing = false;
 	Timer timer;
 	Color colors[4] = {BLUE, RED, GREEN, YELLOW};
 	Rectangle ground = {0, screenHeight - 30, screenWidth, 40};
 	Rectangle* platforms = MemAlloc(sizeof(Rectangle)*4);
 	Rectangle* ladders = MemAlloc(sizeof(Rectangle)*4);
+	Rectangle left = {0,0,30, screenHeight};
+	Rectangle right = {screenWidth - 30,0,30, screenHeight};
+	Rectangle goal = {100, 80, 50, 50};
 	Enemy* enemies = MemAlloc(sizeof(Enemy)*10);
 	static const Rectangle platforms_mem[] = {
 		{0, screenHeight - 270, screenWidth, 30},
@@ -21,14 +25,14 @@ int main(){
 		{0, screenHeight -  690, screenWidth, 30}
 	};
 	static const Enemy enemies_mem[] = {
-		{{45, screenHeight -  725, 35, 35}, IDLE},
-		{{70, screenHeight -  725, 35, 35}, IDLE},
-		{{115, screenHeight -  725, 35, 35}, IDLE}
+		{{50, screenHeight -  725, 35, 35}, IDLE},
+		{{250, screenHeight -  725, 35, 35}, IDLE},
+		{{400, screenHeight -  725, 35, 35}, IDLE}
 	};
 	static const Rectangle ladders_mem[]= {
-		{screenWidth - 80, screenHeight - 270,70,250},
+		{screenWidth - 80 - 70, screenHeight - 270,70,250},
 		{70, screenHeight - 490,70,250},
-		{screenWidth - 75, screenHeight - 690,70,230},
+		{screenWidth - 75 - 70, screenHeight - 690,70,230},
 	};
 	float levels[3] = {screenHeight - 270 - 30, screenHeight - 490 - 30, screenHeight -  690 - 30};
 	memcpy(platforms, platforms_mem, sizeof(platforms_mem));
@@ -42,11 +46,12 @@ int main(){
 		HandleMovement(&player);
 		UpdatePlayerGround(&player, &ground, &ladders[1], deltaTime);
 		if( (fmod(GetTime(), 5) >= 0 && fmod(GetTime(), 5) <= 0.02)){
+			score += GetRandomValue(30, 50);
 			if(enemy_size > 9){
 				enemy_size = 0;
 			} else {
 				if(enemies[enemy_size].space.width == (float)0){
-					enemies[enemy_size] = (Enemy) {{screenWidth - 50, levels[GetRandomValue(0,2)], 30, 30}, 0};
+					enemies[enemy_size] = (Enemy) {{100 * GetRandomValue(1,4), 0/*levels[GetRandomValue(0,2)]*/, 30, 30},GetRandomValue(-5,5), 0};
 				} else {
 				}
 				enemy_size++;
@@ -77,7 +82,12 @@ int main(){
 		} else{
 			showing = false;
 		}
+
 		BeginDrawing();
+		if(game == GAME){
+			DrawRectangleRec(left, BLACK);
+			DrawRectangleRec(right, BLACK);
+			DrawRectangleRec(goal, PINK);
           	ClearBackground(RAYWHITE);
 			for(int i = 0; i < 3; i++){
 			DrawRectangleRec(platforms[i], BLACK);
@@ -87,9 +97,18 @@ int main(){
 			UpdatePlayer(&player, &platforms[i], &ladders[i], deltaTime);
 			}
 			if(showing)DrawRectangleRec(player.fist, RED);
-			DrawText(TextFormat("%f", CheckCollisionRecs(enemy[0].space, ground)), 400 , 100, 20, BLACK);
 			for(int i = 0; i < 10; i++){
+				if(CheckCollisionRecs(player.fist, enemies[i].space)){
+				score += 200;
+				}
 				UpdateEnemy(&enemies[i], &timer, &player, &ground);
+				UpdateEnemy(&enemies[i], &timer, &player, &platforms[i % 4]);
+				HandleBorders(&player.rect, &left, 0);
+				HandleBorders(&player.rect, &right, 1);
+				HandleBorders(&enemies[i].space, &left, 0);
+				HandleBorders(&enemies[i].space, &right, 1);
+				/* at an interval make player speed a random number create enemy struct speed// at fmod, enemy.speed = random()// pos or neg*/
+				/* work on making enemies spawn more in player level*/
 				DrawRectangleRec(enemies[i].space, RED);
 			}
 			DrawText(TextFormat("%i", GetRandomValue(0,2)), 400, 200,20,BLACK);
@@ -101,7 +120,28 @@ int main(){
 				}
 			}
 			DrawRectangleRec(player.rect, BLACK);
-			DrawRectangleRec(ground, BLUE);
+			DrawRectangleRec(ground, BLACK);
+			DrawText(TextFormat("%i", score), 400 , 100, 20, BLACK);
+		} else if(game == OVER){
+			sleep(1);
+			if(lives == 0){
+				ClearBackground(BLACK);
+				DrawText("GAME OVER", 100, 400, 40, RAYWHITE);
+				DrawText(TextFormat("Score: %i", score), 100, 600, 20, RAYWHITE);
+			} else {
+			player = (Player) {{200, 700, 40, 40}, {5, 7}, true, 0, {200, 700, 40, 40} };
+			enemies[0]= (Enemy){{50 * GetRandomValue(1,10), screenHeight -  725, 35, 35}, IDLE};
+			enemies[1]= (Enemy){{50 * GetRandomValue(1,10), screenHeight -  725, 35, 35}, IDLE};
+			enemies[2]= (Enemy){{50 * GetRandomValue(1,10), screenHeight -  725, 35, 35}, IDLE};
+			for(int i = 3; i<10; i++){
+				enemies[i]= (Enemy){{0,0,0,0}, IDLE};
+			}
+			lives--;
+			/*memcpy(enemies, enemies_mem, sizeof(enemies_mem));*/
+			ClearBackground(BLACK);
+			game = GAME;
+			}
+		}
 		EndDrawing();
 		deltaTime = GetFrameTime();
 	}

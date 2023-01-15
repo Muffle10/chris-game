@@ -2,6 +2,8 @@
 bool getCollision(Rectangle object1, Rectangle object2);
 enum enemy_state {IDLE, MOVING, THROWING, CLIMBING};
 int enemy_speed = 0;
+int score = 0;
+enum game_state{START, GAME, OVER, WIN};
 typedef struct Timer {
     double startTime;   // Start time (seconds)
     double lifeTime;    // Lifetime (seconds)
@@ -9,6 +11,7 @@ typedef struct Timer {
 typedef struct Enemy{
 	Rectangle space;
 	enum enemy_state state;
+	float speed;
 } Enemy;
 typedef struct {
 	Vector2 startPos;

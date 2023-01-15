@@ -2,6 +2,9 @@
 	@params: player, entities, amount of entities
 */
 #include "maths.h"
+int random = 0;
+enum game_state game;
+enum game_state game = GAME;
 void DrawLineL(Line line, Color color){
 	DrawLineV(line.startPos, line.endPos, color);
 }
@@ -29,6 +32,7 @@ double GetElapsed(Timer timer)
     return GetTime() - timer.startTime;
 }
 void HandleMovement(Player* player){
+	if(!(/*player->rect.x < 0 || player->rect.x + player->rect.width > screenWidth*/ false)){
 	if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) {
 		player->rect.x -= player->speed.x;
 		player->direction = 0;
@@ -40,6 +44,9 @@ void HandleMovement(Player* player){
 	player->rect.y += player->speed.y;
     player->speed.y += 0.3;
     player->canJump = false;
+	} else {
+		player->rect.x = screenWidth;
+	}
 }
 void HandleLadder(Player* player){
 	if ((IsKeyDown(KEY_DOWN)|| IsKeyDown(KEY_S)))
@@ -101,23 +108,42 @@ void UpdatePlayerGround(Player* player, Rectangle* ground, Rectangle* ladder, fl
 void UpdateEnemy(Enemy* enemy, Timer* timer, Player* player, Rectangle* ground){
 	/*
 	make enemy move left and right randomly by changing enemy.x using raylib getrandomvalue*/
-if( fmod(GetTime(), 5) >= 0 && fmod(GetTime(), 5) <= 0.02 ){
-	enemy->space.x += GetRandomValue(-10 , 10);
+if( fmod(GetTime(), GetRandomValue(0, 5)) >= 0 && fmod(GetTime(), GetRandomValue(0,5)) <= 0.02 ){
 	if(enemy->space.x + enemy->space.width > screenWidth || enemy->space.x < 0){
 		enemy->space.x = 100;
 	}
+	enemy->speed = GetRandomValue(-1, 1);
 }
-if( fmod(GetTime(), 2) >= 0 && fmod(GetTime(), 2) <= 0.5 ){
+if (enemy->space.x < 0 || enemy->space.x + enemy->space.width > screenWidth){
+	enemy->space.x = 400;
+}
+if( fmod(GetTime(), GetRandomValue(1,5)) >= 0 && fmod(GetTime(), GetRandomValue(1,5)) <= 1 ){
+			enemy->space.x -= enemy->speed;
 }
 enemy->space.y += enemy_speed;
 if(CheckCollisionRecs(player->fist, enemy->space)){
 		enemy->space = (Rectangle){0,0,0,0};
 }
-if(CheckCollisionRecs(enemy->space, *ground)){
-		enemy_speed = 0;
+if(CheckCollisionRecs(player->fist, enemy->space)){
+		enemy->space = (Rectangle){0,0,0,0};
+		score += 200;
+}
+if(!CheckCollisionRecs(enemy->space, *ground)){
+		enemy->space.y += 6;
 } else{
-	enemy_speed = 5;
+	enemy->space.y = ground->y - enemy->space.height + 1;
+}
+if(CheckCollisionRecs(enemy->space, player->rect)){
+	game = OVER;
 }
 }
-void HandleEnemyGrav(Enemy* enemy, Rectangle* ground){
+void HandleBorders(Rectangle* space, Rectangle* border, int i){
+	if (CheckCollisionRecs(*space, *border)){
+		if(i == 1){
+		space->x =  border->x - space->width ;
+		} else {
+			space->x =  border->x + border->width;
+		}
+	} else{
+	}
 }
