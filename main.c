@@ -8,10 +8,13 @@ int main(){
 	//Definitions
 	Player player = {{200, 700, 40, 40}, {5, 7}, true, 0, {200, 700, 40, 40} };
 	double deltaTime;
+	int cookies = 0;
 	int lives = 3;
 	bool showing = false;
+	game = GAME;
 	Timer timer;
 	Color colors[4] = {BLUE, RED, GREEN, YELLOW};
+	Rectangle clicker = {200, 300, 100, 100};
 	Rectangle ground = {0, screenHeight - 30, screenWidth, 40};
 	Rectangle* platforms = MemAlloc(sizeof(Rectangle)*4);
 	Rectangle* ladders = MemAlloc(sizeof(Rectangle)*4);
@@ -45,18 +48,6 @@ int main(){
 	while (!WindowShouldClose()){
 		HandleMovement(&player);
 		UpdatePlayerGround(&player, &ground, &ladders[1], deltaTime);
-		if( (fmod(GetTime(), 5) >= 0 && fmod(GetTime(), 5) <= 0.02)){
-			score += GetRandomValue(30, 50);
-			if(enemy_size > 9){
-				enemy_size = 0;
-			} else {
-				if(enemies[enemy_size].space.width == (float)0){
-					enemies[enemy_size] = (Enemy) {{100 * GetRandomValue(1,4), 0/*levels[GetRandomValue(0,2)]*/, 30, 30},GetRandomValue(-5,5), 0};
-				} else {
-				}
-				enemy_size++;
-			}
-		}
 		/*
 		bounds[0]= top
 		bounds[1]= left
@@ -77,7 +68,7 @@ int main(){
 		}} else{
 			player.fist = (Rectangle) {0};
 		}
-		if(IsKeyDown(KEY_SPACE)){
+		if(IsKeyPressed(KEY_SPACE)){
 			showing = true;
 		} else{
 			showing = false;
@@ -85,6 +76,18 @@ int main(){
 
 		BeginDrawing();
 		if(game == GAME){
+			if( (fmod(GetTime(), 5) >= 0 && fmod(GetTime(), 5) <= 0.02)){
+			score += GetRandomValue(30, 50);
+			if(enemy_size > 9){
+				enemy_size = 0;
+			} else {
+				if(enemies[enemy_size].space.width == (float)0){
+					enemies[enemy_size] = (Enemy) {{100 * GetRandomValue(1,4), 0/*levels[GetRandomValue(0,2)]*/, 30, 30},GetRandomValue(-5,5), 0};
+				} else {
+				}
+				enemy_size++;
+			}
+		}
 			DrawRectangleRec(left, BLACK);
 			DrawRectangleRec(right, BLACK);
 			DrawRectangleRec(goal, PINK);
@@ -102,7 +105,13 @@ int main(){
 				score += 200;
 				}
 				UpdateEnemy(&enemies[i], &timer, &player, &ground);
-				UpdateEnemy(&enemies[i], &timer, &player, &platforms[i % 4]);
+				if(CheckCollisionRecs(ground, enemies[3].space)){
+					DrawRectangleRec((Rectangle){30,30,100,100}, RED);
+					//enemies[i].space.y -= 20;
+				} else{
+					enemies[i].space.y += 7;
+				}
+				UpdateEnemy(&enemies[i], &timer, &player, &platforms[ i % 4]);
 				HandleBorders(&player.rect, &left, 0);
 				HandleBorders(&player.rect, &right, 1);
 				HandleBorders(&enemies[i].space, &left, 0);
@@ -111,15 +120,18 @@ int main(){
 				/* work on making enemies spawn more in player level*/
 				DrawRectangleRec(enemies[i].space, RED);
 			}
-			DrawText(TextFormat("%i", GetRandomValue(0,2)), 400, 200,20,BLACK);
+			DrawText(TextFormat("%d", CheckCollisionRecs(enemies[3].space, ground)), 400, 200,20,BLACK);
 			DrawText(TextFormat("%f", fmod(GetTime(), 5)), GetFrameTime(),100,20,BLACK);
-			for(int i = 0; i < 4; i++){
+			/*for(int i = 0; i < 4; i++){
 				DrawLineEx(player.bounds[i].startPos, player.bounds[i].endPos, 10, RED);
 				if(CheckBounds(&player, &ground, i)){
 					DrawLineEx(player.bounds[i].startPos, player.bounds[i].endPos, 100, PINK);
 				}
+			}*/
+			if(CheckCollisionRecs(player.rect, goal)){
+				game = WIN;
 			}
-			DrawRectangleRec(player.rect, BLACK);
+			DrawRectangleRec(player.rect, BLUE);
 			DrawRectangleRec(ground, BLACK);
 			DrawText(TextFormat("%i", score), 400 , 100, 20, BLACK);
 		} else if(game == OVER){
@@ -141,6 +153,18 @@ int main(){
 			ClearBackground(BLACK);
 			game = GAME;
 			}
+		}else if(game == WIN){
+			ClearBackground(BLACK);
+			DrawText(TextFormat("Score: %i", score), 100,200, 20, RAYWHITE);
+			DrawText("You Win!",100,100,30,WHITE);
+			if(score >= 4269){
+				DrawCircleV((Vector2){clicker.x + 20, clicker.y}, 50, DARKBROWN);
+				if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)  && CheckCollisionPointCircle(GetMousePosition(), (Vector2){clicker.x + 10, clicker.y}, 50)){
+					cookies++;
+				}
+				DrawText(TextFormat("%i", cookies), clicker.x, clicker.y + clicker.width, 20, WHITE);
+			}
+
 		}
 		EndDrawing();
 		deltaTime = GetFrameTime();

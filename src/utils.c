@@ -4,7 +4,7 @@
 #include "maths.h"
 int random = 0;
 enum game_state game;
-enum game_state game = GAME;
+enum game_state game = WIN;
 void DrawLineL(Line line, Color color){
 	DrawLineV(line.startPos, line.endPos, color);
 }
@@ -128,10 +128,9 @@ if(CheckCollisionRecs(player->fist, enemy->space)){
 		enemy->space = (Rectangle){0,0,0,0};
 		score += 200;
 }
-if(!CheckCollisionRecs(enemy->space, *ground)){
-		enemy->space.y += 6;
+if(CheckCollisionRecs(enemy->space, *ground)){
+	enemy->space.y = ground->y - enemy->space.height;
 } else{
-	enemy->space.y = ground->y - enemy->space.height + 1;
 }
 if(CheckCollisionRecs(enemy->space, player->rect)){
 	game = OVER;
