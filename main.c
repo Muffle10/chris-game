@@ -107,7 +107,7 @@ int main(){
 				UpdateEnemy(&enemies[i], &timer, &player, &ground);
 				if(CheckCollisionRecs(ground, enemies[3].space)){
 					DrawRectangleRec((Rectangle){30,30,100,100}, RED);
-					//enemies[i].space.y -= 20;
+					enemies[i].space.y -= 20;
 				} else{
 					enemies[i].space.y += 7;
 				}
