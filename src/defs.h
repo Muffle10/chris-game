@@ -10,7 +10,7 @@ typedef struct Timer {
 } Timer;
 typedef struct Enemy{
 	Rectangle space;
-	enum enemy_state state;
+	bool living;
 	float speed;
 } Enemy;
 typedef struct {

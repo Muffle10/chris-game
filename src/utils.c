@@ -123,6 +123,7 @@ if( fmod(GetTime(), GetRandomValue(1,5)) >= 0 && fmod(GetTime(), GetRandomValue(
 enemy->space.y += enemy_speed;
 if(CheckCollisionRecs(player->fist, enemy->space)){
 		enemy->space = (Rectangle){0,0,0,0};
+		enemy->living = false;
 }
 if(CheckCollisionRecs(player->fist, enemy->space)){
 		enemy->space = (Rectangle){0,0,0,0};
@@ -132,7 +133,7 @@ if(CheckCollisionRecs(enemy->space, *ground)){
 	enemy->space.y = ground->y - enemy->space.height;
 } else{
 }
-if(CheckCollisionRecs(enemy->space, player->rect)){
+if(CheckCollisionRecs(enemy->space, player->rect) && enemy->living){
 	game = OVER;
 }
 }
