@@ -9,7 +9,12 @@ int main(){
 	Player player = {{200, 700, 40, 40}, {5, 7}, true, 0, {200, 700, 40, 40} };
 	double deltaTime;
 	int cookies = 0;
+	int frames = 0;
 	bool exit = true;
+	unsigned int nextFrameDataOffset = 0; 
+    int currentAnimFrame = 0;       
+    int frameDelay = 8;             
+    int frameCounter = 0;    
 	score = 0;
 	int lives = 3;
 	bool showing = false;
@@ -46,14 +51,51 @@ int main(){
 	memcpy(enemies, enemies_mem, sizeof(enemies_mem));
 
    	InitWindow(screenWidth, screenHeight, title);
-		Image image = LoadImage("assets/milk.png");
-		Image cat = LoadImage("assets/cat.gif");
+		Image base = LoadImage("assets/milk.png");
 		Image punching = LoadImage("assets/grass.png");
-		ImageResize(&image, 41, 41);        
-		Texture2D texture = LoadTextureFromImage(image);          // Image converted to texture, GPU memory (VRAM)
+		Image walk_left = LoadImage("assets/grass.png");
+		Image walk_right = LoadImage("assets/grass.png");
+		Image jump_left = LoadImage("assets/grass.png");
+		Image jump_right = LoadImage("assets/grass.png");
+
+		Image falling = LoadImage("assets/milk.png");
+		Image enemy = LoadImage("assets/milk.png");
+
+		Image milkI = LoadImage("assets/milk.png");
+
+
+		Image catAnim = LoadImage("assets/cat.gif");
+		ImageResize(&base, 41, 41);
+		ImageResize(&punching, 41, 41);   
+		ImageResize(&walk_left, 41, 41);   
+		ImageResize(&walk_right, 41, 41);   
+		ImageResize(&jump_left, 41, 41);  
+		ImageResize(&milkI, 50, 50);  
+		ImageResize(&jump_right, 41, 41);           
+		Texture2D cat = LoadTextureFromImage(catAnim);
+		Texture2D milk = LoadTextureFromImage(milkI);
+		Texture2D texture = LoadTextureFromImage(base);          // Image converted to texture, GPU memory (VRAM)
    	SetTargetFPS(60);
 	int enemy_size = sizeof(enemies_mem) / sizeof(Enemy);
 	while (!window){
+		frameCounter++;
+        if (frameCounter >= frameDelay)
+        {
+            // Move to next frame
+            // NOTE: If final frame is reached we return to first frame
+            currentAnimFrame++;
+            if (currentAnimFrame >= frames) currentAnimFrame = 0;
+
+            // Get memory offset position for next frame data in image.data
+            nextFrameDataOffset = catAnim.width*catAnim.height*4*currentAnimFrame;
+
+            // Update GPU texture data with next frame image data
+            // WARNING: Data size (frame size) and pixel format must match already created texture
+            UpdateTexture(cat, ((unsigned char *)catAnim.data) + nextFrameDataOffset);
+
+            frameCounter = 0;
+        }
+
 		HandleMovement(&player);
 		UpdatePlayerGround(&player, &ground, &ladders[1], deltaTime);
 		if (IsKeyPressed(KEY_ESCAPE) || WindowShouldClose()) window = true;
@@ -77,18 +119,18 @@ int main(){
 		}} else{
 			player.fist = (Rectangle) {0};
 		}
-		if(IsKeyDown(KEY_SPACE) && exit){
+		if((IsKeyDown(KEY_SPACE) && exit) || (IsKeyPressed(KEY_SPACE))){
 			showing = true;
 			texture = LoadTextureFromImage(punching); 
-			if( (fmod(GetTime(), 2) >= 0 && fmod(GetTime(), 2) <= 0.02)){
+			if( (fmod(GetTime(), 1.75) >= 0 && fmod(GetTime(), 1.75) <= 0.02)){
 				exit = false;
 			}
 		} else{
 			showing = false;
-			if( (fmod(GetTime(), 2) >= 0 && fmod(GetTime(), 2) <= 0.02)){
+			if( (fmod(GetTime(), 1.5) >= 0 && fmod(GetTime(), 1.5) <= 0.02)){
 				exit = true;
 			}
-			texture = LoadTextureFromImage(image); 
+			texture = LoadTextureFromImage(base); 
 		}
 
 		BeginDrawing();
@@ -107,7 +149,7 @@ int main(){
 		}
 			DrawRectangleRec(left, BLACK);
 			DrawRectangleRec(right, BLACK);
-			DrawRectangleRec(goal, PINK);
+			DrawRectangleRec(goal, RAYWHITE);
           	ClearBackground(RAYWHITE);
 			for(int i = 0; i < 3; i++){
 			DrawRectangleRec(platforms[i], BLACK);
@@ -117,6 +159,7 @@ int main(){
 			UpdatePlayer(&player, &platforms[i], &ladders[i], deltaTime);
 			}
 			if(showing)DrawRectangleRec(player.fist, RED);
+			DrawTexture(cat, 100, 200, WHITE);
 			DrawText(TextFormat("%i", enemies[enemy_size - 1].space.y), 400, 200,20,BLACK);
 			for(int i = 0; i < 10; i++){
 				if(CheckCollisionRecs(enemies[i].space, ground)){
@@ -146,7 +189,9 @@ int main(){
 				game = WIN;
 			}
 			DrawRectangleRec(player.rect, WHITE);
+			DrawTexture(cat, GetScreenWidth()/2 - cat.width/2, 140, WHITE);
 			DrawTextureEx(texture,(Vector2){ player.rect.x - 30, player.rect.y - 45},0, 3, WHITE);
+			DrawTexture(milk,goal.x , goal.y , WHITE);
 			DrawRectangleRec(ground, BLACK);
 			DrawText(TextFormat("%i", score), 400 , 100, 20, BLACK);
 		} else if(game == OVER){
@@ -207,8 +252,11 @@ int main(){
 		EndDrawing();
 		deltaTime = GetFrameTime();
 	}
-	
-	UnloadImage(image);
+	UnloadTexture(cat);  
+	UnloadTexture(milk); // Unload texture
+    UnloadImage(catAnim); 
+	UnloadImage(milkI); 
+	UnloadImage(base);
 	UnloadImage(punching);
 	UnloadTexture(texture);    
 	CloseWindow(); 
