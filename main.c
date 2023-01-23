@@ -47,6 +47,7 @@ int main(){
 
    	InitWindow(screenWidth, screenHeight, title);
 		Image image = LoadImage("assets/milk.png");
+		Image cat = LoadImage("assets/cat.gif");
 		Image punching = LoadImage("assets/grass.png");
 		ImageResize(&image, 41, 41);        
 		Texture2D texture = LoadTextureFromImage(image);          // Image converted to texture, GPU memory (VRAM)
