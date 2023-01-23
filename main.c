@@ -85,7 +85,7 @@ int main(){
 			}
 		} else{
 			showing = false;
-			if( (fmod(GetTime(), 1) >= 0 && fmod(GetTime(), 1) <= 0.02)){
+			if( (fmod(GetTime(), 2) >= 0 && fmod(GetTime(), 2) <= 0.02)){
 				exit = true;
 			}
 			texture = LoadTextureFromImage(image); 
